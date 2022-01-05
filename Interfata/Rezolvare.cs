@@ -8,6 +8,10 @@ namespace SimpleCheckers
     {
         /// <summary>
         /// Calculeaza functia de evaluare statica pentru configuratia (tabla) curenta
+        /// Functia trebuie sa tine cont de:
+        ///     pozitia piesei(safe/danger/attack zone)
+        ///     piesa poate deveni dama
+        ///     
         /// </summary>
         public double EvaluationFunction()
         {
@@ -26,6 +30,48 @@ namespace SimpleCheckers
                 }
             }
             return computerPoints - opponentPoints;
+        }
+
+        public double EvaluationFunction2()
+        {
+            double humanPoints = 0;
+            double computerPoints = 0;
+
+            // Ponderi
+            double canAttackPoints = 4;     // puncte primite pentru pozitionare ofensiva
+            double beingAttackedPoints = -4;// puncte primite pentru pozitionare primejdioasa
+            double advancingPoints = 2;     // puncte primite pentru pisele normale care avanseaza catre ultima linie pr a deveni dame
+            double normalPieceValue = 8;    // puncte primite pentru fiecare piesa normala pe care o detin
+            double kingPieceValue =normalPieceValue*2+(Size-1)*advancingPoints;     // puncte primite pentru fiecare dama pe care o detin
+            // Ar trebui sa incurajes deplasarea pieselor de tip dama catre celelalte piese inamice
+
+
+            foreach(Piece piece in this.Pieces)
+            {
+                if (piece.Player == PlayerType.Human)
+                {
+                    // Scorul primit pentru ca piesa exista
+                    humanPoints += piece.PT == PieceType.Normal ? normalPieceValue : kingPieceValue;
+                    humanPoints += GetAllAttackers(piece).Count * beingAttackedPoints;
+                    humanPoints += GetAllAttacked(piece).Count * canAttackPoints;
+                    if (piece.PT == PieceType.Normal)
+                    {
+                        humanPoints += piece.Y * advancingPoints;
+                    }
+                }
+                if(piece.Player == PlayerType.Computer)
+                {
+                    computerPoints += piece.PT == PieceType.Normal ? normalPieceValue : kingPieceValue;
+                    computerPoints += GetAllAttackers(piece).Count * beingAttackedPoints;
+                    computerPoints += GetAllAttacked(piece).Count * canAttackPoints;
+                    if (piece.PT == PieceType.Normal)
+                    {
+                        computerPoints += (Size - 1 - piece.Y) * advancingPoints;
+                    }
+                }
+            }
+
+            return computerPoints - humanPoints;
         }
     }
 
@@ -289,7 +335,7 @@ namespace SimpleCheckers
             // altfel e jucatorul daci minimizez
             if (depth >= Minimax._depth)
             {
-                return currentBoard.EvaluationFunction();
+                return currentBoard.EvaluationFunction2();
             }
             //Maximizare
             if (depth % 2 == 0)

@@ -36,6 +36,7 @@ namespace SimpleCheckers
             int pieceId = 0;
 
             // Adaug piesele pe tabla
+            //Piese Inamice
             for (int i = 0; i < Size; i++)
                 if (i % 2 == 0)
                 {
@@ -49,7 +50,7 @@ namespace SimpleCheckers
                     Pieces.Add(new Piece(i, Size - 3, pieceId, PlayerType.Computer));
                     pieceId += 1;
                 }
-            
+            //Piese aliate
             for (int i = 0; i < Size; i++)
                 if (i % 2 == 0)
                 {
@@ -60,7 +61,9 @@ namespace SimpleCheckers
                 }
                 else
                 {
-                    Pieces.Add(new Piece(i, 1, pieceId, PlayerType.Human));
+                    Piece p = new Piece(i, 1, pieceId, PlayerType.Human);
+                    p.PT = PieceType.King;
+                    Pieces.Add(p);
                     pieceId+=1;
                 }
         }
@@ -92,8 +95,16 @@ namespace SimpleCheckers
             {
                 if (piece.Id == move.PieceId)
                 {
+                    // Schimb coordonatele
                     piece.X = move.NewX;
                     piece.Y = move.NewY;
+
+                    // Verific daca piesa a ajuns pe ultima linie in urma acestei mutari
+                    // daca a ajuns atunci aceasta va deveni dama
+                    if (piece.Player == PlayerType.Computer && piece.Y == 0)
+                        piece.PT = PieceType.King;
+                    if (piece.Player == PlayerType.Human && piece.Y == Size - 1)
+                        piece.PT = PieceType.King;
                 }
             }
 
@@ -107,9 +118,8 @@ namespace SimpleCheckers
         /// <param name="winner">Cine a castigat: omul sau calculatorul</param>
         public void CheckFinish(out bool finished, out PlayerType winner)
         {
+          
             /*
-             !!!!!!!!!!!!!!!!
-             */
             if (Pieces.Where(p => p.Player == PlayerType.Human && p.Y == Size - 1).Count() == Size)
             {
                 finished = true;
@@ -126,6 +136,23 @@ namespace SimpleCheckers
 
             finished = false;
             winner = PlayerType.None;
+            */
+
+            // Cine ramane primul fara piese pierde
+            if(Pieces.Where(p=> p.Player == PlayerType.Human).Count() == 0)
+            {
+                finished = true;
+                winner = PlayerType.Computer;
+                return;
+            }
+            if (Pieces.Where(p => p.Player == PlayerType.Computer).Count() == 0)
+            {
+                finished = true;
+                winner = PlayerType.Human;
+                return;
+            }
+            finished = false;
+            winner = PlayerType.None;
         }
 
         public List<Piece> GetNeighbours(Piece piece)
@@ -134,6 +161,65 @@ namespace SimpleCheckers
                              p.X == piece.X + 1 && p.Y == piece.Y - 1||
                               p.X == piece.X - 1 && p.Y == piece.Y + 1||
                                p.X == piece.X - 1 && p.Y == piece.Y - 1);
+        }
+
+        public List<Piece> GetAllAttackers(Piece piece)
+        {
+            List<Piece> attackers = new List<Piece>();
+            List<Piece> neighbours = GetNeighbours(piece);
+
+            foreach(Piece p in neighbours)
+            {
+                // Piesa nu e aliata
+                if (p.Player != piece.Player)
+                {
+                    if(p.PT==PieceType.Normal)
+                    {
+                        // Verific daca este loc sa stationeze pentru piesa care incearca sa o manance pe aceasta 
+                        if (p.Player==PlayerType.Computer && p.Y>piece.Y 
+                            && neighbours.Where(neighbour=> 2*piece.X-p.X==neighbour.X && 2*piece.Y-p.Y==neighbour.Y).Count()==0
+                            )
+                        {
+                            attackers.Add(p);
+                        }else if(p.Player==PlayerType.Human && p.Y < piece.Y
+                            && neighbours.Where(neighbour => 2 * piece.X - p.X == neighbour.X && 2 * piece.Y - p.Y == neighbour.Y).Count() == 0
+                            )
+                        {
+                            attackers.Add(p);
+                        }
+                    }
+                    else//  Damele se pot misca in toate directiile
+                    {
+                        if(neighbours.Where(neighbour => 2 * piece.X - p.X == neighbour.X && 2 * piece.Y - p.Y == neighbour.Y).Count() == 0)
+                        {
+                            attackers.Add(p);
+                        }
+                    }
+                }
+            }
+            return attackers;
+        }
+
+        public List<Piece> GetAllAttacked(Piece piece)
+        {
+            List<Piece> attacked = new List<Piece>();
+            List<Piece> neighbours = GetNeighbours(piece);
+
+            foreach(Piece p in neighbours)
+            {
+                if(p.Player != piece.Player)
+                {
+                    // Daca piesa piece se afla printre piese ce ataca p 
+                    // atunci p este trecuta in colectia attacked
+                    List<Piece> attackers = GetAllAttackers(p);
+                    if(attackers.Where(attacker=> attacker.Id == piece.Id).Count() == 1)
+                    {
+                        attacked.Add(p);
+                    }
+                }
+            }
+
+            return attacked;
         }
     }
 }

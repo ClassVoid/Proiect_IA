@@ -32,6 +32,10 @@ namespace SimpleCheckers
         private int yOffset = 0;
 
         private List<Move> humanValidMoves=new List<Move>();
+        //Define brush color for king pieces
+        SolidBrush opacRed = new SolidBrush(Color.FromArgb(240, 255, 0, 128));
+        SolidBrush opacGreen = new SolidBrush(Color.FromArgb(240, 0, 255, 0));
+        SolidBrush selectedColor = new SolidBrush(Color.FromArgb(240, 255, 255, 255));
         /*
          Important data
          */
@@ -85,13 +89,13 @@ namespace SimpleCheckers
 
             foreach (Piece p in _board.Pieces)
             {
-                SolidBrush brush = transparentRed;
+                SolidBrush brush = p.PT==PieceType.Normal? transparentRed: opacRed;
                 if (p.Player == PlayerType.Human)
                 {
                     if (p.Id == _selected)
-                        brush = transparentYellow;
+                        brush = p.PT == PieceType.Normal ? transparentYellow : selectedColor;
                     else
-                        brush = transparentGreen;
+                        brush = p.PT == PieceType.Normal ? transparentGreen : opacGreen; 
                 }
 
                 e.Graphics.FillEllipse(brush,
@@ -213,6 +217,7 @@ namespace SimpleCheckers
             int dy = pictureHeigth - distanceBetweenPices + yOffset;
             SolidBrush transparentRed = new SolidBrush(Color.FromArgb(192, 255, 0, 0));
             SolidBrush transparentGreen = new SolidBrush(Color.FromArgb(192, 0, 128, 0));
+            
 
             Bitmap final = new Bitmap(pictureWidth, pictureHeigth);
             Graphics g = Graphics.FromImage(final);
@@ -228,9 +233,9 @@ namespace SimpleCheckers
                     double avx = (j * b2.Pieces[i].X + (noSteps - j) * b1.Pieces[i].X) / (double)noSteps;
                     double avy = (j * b2.Pieces[i].Y + (noSteps - j) * b1.Pieces[i].Y) / (double)noSteps;
 
-                    SolidBrush brush = transparentRed;
+                    SolidBrush brush = b1.Pieces[i].PT==PieceType.Normal? transparentRed: opacRed;
                     if (b1.Pieces[i].Player == PlayerType.Human)
-                        brush = transparentGreen;
+                        brush = b1.Pieces[i].PT==PieceType.Normal? transparentGreen: opacGreen;
 
                     g.FillEllipse(brush,
                         (int)(xOffset + avx * distanceBetweenPices), (int)(dy - avy * distanceBetweenPices),

@@ -18,3 +18,13 @@ C:\Facultate\anul4\sem1\IA\labs\Proiect\Interfata\obj\Debug\SimpleCheckers.cspro
 C:\Facultate\anul4\sem1\IA\labs\Proiect\Interfata\obj\Debug\SimpleCheckers.csproj.CoreCompileInputs.cache
 C:\Facultate\anul4\sem1\IA\labs\Proiect\Interfata\obj\Debug\SimpleCheckers.exe
 C:\Facultate\anul4\sem1\IA\labs\Proiect\Interfata\obj\Debug\SimpleCheckers.pdb
+C:\Facultate\anul4\sem1\IA\labs\Proiect\Proiect_IA\Interfata\bin\Debug\SimpleCheckers.exe.config
+C:\Facultate\anul4\sem1\IA\labs\Proiect\Proiect_IA\Interfata\bin\Debug\SimpleCheckers.exe
+C:\Facultate\anul4\sem1\IA\labs\Proiect\Proiect_IA\Interfata\bin\Debug\SimpleCheckers.pdb
+C:\Facultate\anul4\sem1\IA\labs\Proiect\Proiect_IA\Interfata\obj\Debug\SimpleCheckers.csproj.AssemblyReference.cache
+C:\Facultate\anul4\sem1\IA\labs\Proiect\Proiect_IA\Interfata\obj\Debug\SimpleCheckers.MainForm.resources
+C:\Facultate\anul4\sem1\IA\labs\Proiect\Proiect_IA\Interfata\obj\Debug\SimpleCheckers.Properties.Resources.resources
+C:\Facultate\anul4\sem1\IA\labs\Proiect\Proiect_IA\Interfata\obj\Debug\SimpleCheckers.csproj.GenerateResource.cache
+C:\Facultate\anul4\sem1\IA\labs\Proiect\Proiect_IA\Interfata\obj\Debug\SimpleCheckers.csproj.CoreCompileInputs.cache
+C:\Facultate\anul4\sem1\IA\labs\Proiect\Proiect_IA\Interfata\obj\Debug\SimpleCheckers.exe
+C:\Facultate\anul4\sem1\IA\labs\Proiect\Proiect_IA\Interfata\obj\Debug\SimpleCheckers.pdb
