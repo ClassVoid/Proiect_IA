@@ -112,7 +112,7 @@ namespace SimpleCheckers
             richTextBox1.Name = "richTextBox1";
             richTextBox1.Size = new System.Drawing.Size(351, 548);
             richTextBox1.TabIndex = 2;
-            richTextBox1.Text = "hello";
+            richTextBox1.Text = "";
             richTextBox1.ReadOnly = true;
             
             

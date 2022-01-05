@@ -19,6 +19,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace SimpleCheckers
 {
@@ -43,6 +44,10 @@ namespace SimpleCheckers
         private int _selected; // id-ul piesei selectate
         private PlayerType _currentPlayer; // om sau calculator
         private Bitmap _boardImage;
+        /*
+            Utils
+         */
+        private Stopwatch watch = new Stopwatch(); 
 
         public MainForm()
         {
@@ -179,7 +184,11 @@ namespace SimpleCheckers
         {
             Board nextBoard;
             Move nextMove;
+            watch.Start();
             (nextBoard, nextMove) = MinimaxAlphaBeta.FindNextBoard(_board);
+            watch.Stop();
+            richTextBox1.Text += $"Search time: {watch.ElapsedMilliseconds} ms\r\n";
+            watch.Reset();
             nextBoard.Pieces.RemoveAll(p => p.Id == nextMove.AttackedId);
             _board.Pieces.RemoveAll(p => p.Id == nextMove.AttackedId);
             AnimateTransition(_board, nextBoard);
