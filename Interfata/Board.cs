@@ -40,7 +40,9 @@ namespace SimpleCheckers
             for (int i = 0; i < Size; i++)
                 if (i % 2 == 0)
                 {
-                    Pieces.Add(new Piece(i, Size - 2, pieceId, PlayerType.Computer));
+                    Piece p = new Piece(i, Size - 2, pieceId, PlayerType.Computer);
+                    p.PT = PieceType.King;
+                    Pieces.Add(p);
                     pieceId += 1;
                 }
                 else

@@ -231,7 +231,7 @@ namespace SimpleCheckers
             Bitmap final = new Bitmap(pictureWidth, pictureHeigth);
             Graphics g = Graphics.FromImage(final);
 
-            int noSteps = 50;
+            int noSteps = 10;
 
             for (int j = 1; j < noSteps; j++)
             {
