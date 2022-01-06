@@ -44,6 +44,7 @@ namespace SimpleCheckers
         private int _selected; // id-ul piesei selectate
         private PlayerType _currentPlayer; // om sau calculator
         private Bitmap _boardImage;
+        private int _difficultyDepth = 4;
         /*
             Utils
          */
@@ -185,6 +186,7 @@ namespace SimpleCheckers
             Board nextBoard;
             Move nextMove;
             watch.Start();
+            MinimaxAlphaBeta._depth = _difficultyDepth;
             (nextBoard, nextMove) = MinimaxAlphaBeta.FindNextBoard(_board);
             watch.Stop();
             richTextBox1.Text += $"Search time: {watch.ElapsedMilliseconds} ms\r\n";
@@ -258,25 +260,66 @@ namespace SimpleCheckers
 
         private void jocNouToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
-            _board = new Board();
-            _currentPlayer = PlayerType.Computer;
-            ComputerMove();
+            //_board = new Board();
+            //_currentPlayer = PlayerType.Computer;
+            //ComputerMove();
         }
 
         private void despreToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            const string copyright =
-                "Algoritmul minimax\r\n" +
-                "Inteligenta artificiala, Laboratorul 8\r\n" +
-                "(c)2016-2017 Florin Leon\r\n" +
-                "http://florinleon.byethost24.com/lab_ia.htm";
+            const string reguli =
+                " - Piese jucătorului sunt cele verzi\r\n" +
+                " \r\n" +
+                " - Scopul jocului este de a elimina toate piesele adversarului, acest lucru realizându-se printr-un salt peste piesa inamică\r\n" +
+                " \r\n" +
+                " - Piesele marcate cu culori diferite față de restul, pentru fiecare jucător, se pot deplasa în toate cele patru direcții, comparativ cu restul care se deplaseaza doar către zona opusă\r\n" +
+                " \r\n" +
+                " - Orice piesă care ajunge în zona opusă devine o piesă specială și astfel se poate deplasa pe orice direcție \r\n";
 
-            MessageBox.Show(copyright, "Despre jocul Dame simple");
+            MessageBox.Show(reguli, "Reguli");
         }
 
         private void iesireToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
             Environment.Exit(0);
+        }
+
+        private void easyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _board = new Board();
+            richTextBox1.Clear();
+            _currentPlayer = PlayerType.Computer;
+            _difficultyDepth = 1;
+            levelDifficulty.Text = "Easy";
+            depthSearch.Text = _difficultyDepth.ToString();
+            ComputerMove();
+        }
+
+        private void mediumToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _board = new Board();
+            richTextBox1.Clear();
+            _currentPlayer = PlayerType.Computer;
+            _difficultyDepth = 4;
+            levelDifficulty.Text = "Medium";
+            depthSearch.Text = _difficultyDepth.ToString();
+            ComputerMove();
+        }
+
+        private void hardToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _board = new Board();
+            richTextBox1.Clear();
+            _currentPlayer = PlayerType.Computer;
+            _difficultyDepth = 7;
+            levelDifficulty.Text = "Hard";
+            depthSearch.Text = _difficultyDepth.ToString();
+            ComputerMove();
+        }
+
+        private void reguliToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            
         }
     }
 }

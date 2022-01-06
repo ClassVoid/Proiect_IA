@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 namespace SimpleCheckers
 {
     /// <summary>
-    /// Implementeaza algoritmil minimax cu aplha beta prunning
+    /// Implementeaza algoritmul minimax cu aplha beta prunning
     /// </summary>
     class MinimaxAlphaBeta
     {
         private static Random _rand = new Random();
 
-        private static int _depth = 6;
+        public static int _depth = 6;
 
         public static (Board, Move) FindNextBoard(Board currentBoard)
         {
@@ -71,7 +71,7 @@ namespace SimpleCheckers
             // altfel e jucatorul daci minimizez
             if (depth >= _depth)
             {
-                return currentBoard.EvaluationFunction();
+                return currentBoard.EvaluationFunction2();
             }
             //Maximizare
             if (depth % 2 == 0)
