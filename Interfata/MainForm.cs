@@ -311,7 +311,7 @@ namespace SimpleCheckers
             _board = new Board();
             richTextBox1.Clear();
             _currentPlayer = PlayerType.Computer;
-            _difficultyDepth = 7;
+            _difficultyDepth = 5;
             levelDifficulty.Text = "Hard";
             depthSearch.Text = _difficultyDepth.ToString();
             ComputerMove();

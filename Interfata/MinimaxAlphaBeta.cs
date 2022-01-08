@@ -64,11 +64,11 @@ namespace SimpleCheckers
 
             return (bestVariants[chosen], bestMoves[chosen]);
         }
+
+        // daca adancimea are valoare para e calculatorul(maximizez)
+        // altfel e jucatorul deci minimizez
         public static double Evaluate(Board currentBoard, int depth, double alpha, double beta)
         {
-            // trebuie sa clonez currentBoard
-            // daca adancimea are valoare para e calculatorul(maximizez)
-            // altfel e jucatorul daci minimizez
             if (depth >= _depth)
             {
                 return currentBoard.EvaluationFunction2();
@@ -77,7 +77,6 @@ namespace SimpleCheckers
             if (depth % 2 == 0)
             {
                 double max = double.NegativeInfinity;
-                
                 foreach (Piece piece in currentBoard.Pieces)
                 {
                     if (piece.Player == PlayerType.Computer)
@@ -87,10 +86,9 @@ namespace SimpleCheckers
                         {
                             Board boardVariant = currentBoard.MakeMove(move);
                             double score = Evaluate(boardVariant, depth + 1, alpha, beta);
-                            
                             max = Math.Max(max, score);
                             alpha = Math.Max(alpha, score);
-                            if (beta <= alpha) break;
+                            if (beta <= alpha) return max;//break;
                         }
                     }
                 }
@@ -99,8 +97,7 @@ namespace SimpleCheckers
             else
             {
                 //Minimizez
-                double min = double.PositiveInfinity;
-                
+                double min = double.PositiveInfinity;       
                 foreach (Piece piece in currentBoard.Pieces)
                 {
                     if (piece.Player == PlayerType.Human)
@@ -110,10 +107,9 @@ namespace SimpleCheckers
                         {
                             Board boardVariant = currentBoard.MakeMove(move);
                             double score = Evaluate(boardVariant, depth + 1, alpha, beta);
-                           
                             min = Math.Min(min, score);
                             beta = Math.Min(beta, score);
-                            if (beta <= alpha) break;
+                            if (beta <= alpha) return min; //break;
                         }
                     }
                 }

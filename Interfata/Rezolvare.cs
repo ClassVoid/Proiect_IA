@@ -295,7 +295,7 @@ namespace SimpleCheckers
                     foreach(Move move in moves)
                     {
                         Board boardVariant = currentBoard.MakeMove(move);
-                        double score = Evaluate(boardVariant,1);
+                        double score = Evaluate(boardVariant,0);
                         if (first)
                         {
                             max = score;
