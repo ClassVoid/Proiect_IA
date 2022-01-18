@@ -44,16 +44,19 @@ namespace SimpleCheckers
         private int _selected; // id-ul piesei selectate
         private PlayerType _currentPlayer; // om sau calculator
         private Bitmap _boardImage;
-        private int _difficultyDepth = 4;
         /*
             Utils
          */
-        private Stopwatch watch = new Stopwatch(); 
+        private Stopwatch watch = new Stopwatch();
+        private int _algorithmType;
+        private int _depthSearch;
 
         public MainForm()
         {
             InitializeComponent();
             
+
+
 
             try
             {
@@ -136,7 +139,6 @@ namespace SimpleCheckers
             }
             else// Daca dau inca o data click pe aia selectata, o deselectez
             {
-                //!!!!!! CEL MAI POSIBIL VA GENERA ERORI
                 //Piece selectedPiece = _board.Pieces[_selected];
                 Piece selectedPiece = _board.Pieces[0];
 
@@ -185,11 +187,23 @@ namespace SimpleCheckers
         {
             Board nextBoard;
             Move nextMove;
+
+            SetParameters();
+
+            CheckFinish();
+
             watch.Start();
-            MinimaxAlphaBeta._depth = _difficultyDepth;
-            (nextBoard, nextMove) = MinimaxAlphaBeta.FindNextBoard(_board);
+            if(_algorithmType == 1)
+            {
+                (nextBoard, nextMove) = Minimax.FindNextBoard(_board);
+            }
+            else
+            {
+                (nextBoard, nextMove) = MinimaxAlphaBeta.FindNextBoard(_board);
+            }
+            
             watch.Stop();
-            richTextBox1.Text += $"Search time: {watch.ElapsedMilliseconds} ms\r\n";
+            richTextBox1.Text += $"Adancime <{_depthSearch}> timp cautare: {watch.ElapsedMilliseconds} ms    <{evaluateFunctionType.Text}>\r\n";
             watch.Reset();
             nextBoard.Pieces.RemoveAll(p => p.Id == nextMove.AttackedId);
             _board.Pieces.RemoveAll(p => p.Id == nextMove.AttackedId);
@@ -200,26 +214,118 @@ namespace SimpleCheckers
             _currentPlayer = PlayerType.Human;
 
             CheckFinish();
+
+
+        }
+
+        private void SetParameters()
+        {
+            _depthSearch = Int32.Parse(depthSearch.Text);
+            if (evaluateFunctionType.Text == "Minimax simplu")
+            {
+                Minimax._depth = _depthSearch;
+                _algorithmType = 1;
+            }
+            else
+            {
+                if (evaluateFunctionType.Text == "Minimax alpha-beta pruning")
+                {
+                    MinimaxAlphaBeta._depth = _depthSearch;
+                    _algorithmType = 2;
+                }
+                else
+                {
+                    Minimax._depth = _depthSearch;
+                    _algorithmType = 1;
+                }
+            }
+
+            if (Int32.Parse(depthSearch.Text) <= 1)
+            {
+                levelDifficulty.Text = "Ușor";
+            }
+            else
+            {
+                if (Int32.Parse(depthSearch.Text) > 1 && Int32.Parse(depthSearch.Text) <= 4)
+                {
+                    levelDifficulty.Text = "Mediu";
+                }
+                else
+                {
+                    levelDifficulty.Text = "Greu";
+
+                }
+
+            }
         }
 
         private void CheckFinish()
         {
-            bool end; PlayerType winner;
-            _board.CheckFinish(out end, out winner);
+            // Daca un jucator nu mai are mutari disponibile, este blocat si se considera ca a pierdut
 
-            if (end)
+            List<Move> validMoves = new List<Move>();
+            bool existsMoveHuman = false;
+            bool existsMoveComputer = false;
+
+            foreach (Piece piece in _board.Pieces)
             {
-                if (winner == PlayerType.Computer)
+                validMoves = piece.ValidMoves(_board);
+                if (piece.Player == PlayerType.Computer)
+                {
+                    if (validMoves.Count() > 0)
+                    {
+                        existsMoveComputer = true;
+                    }
+                }
+                else
+                if (piece.Player == PlayerType.Human)
+                {
+                    if (validMoves.Count() > 0)
+                    {
+                        //MessageBox.Show(piece.Id.ToString()  + " - x: " + validMoves[0].NewX + "  - y: " + validMoves[0].NewY);
+                        existsMoveHuman = true;
+                    }
+                }
+            }
+
+
+
+            if (existsMoveComputer == false)        // omul a castigat, computerul este blocat
+            {
+                MessageBox.Show("Ai castigat!");
+                _currentPlayer = PlayerType.None;
+                jocNou();
+            }
+            else
+            {
+                if (existsMoveHuman == false)       // // calculatorul a castigat, onul este blocat
                 {
                     MessageBox.Show("Calculatorul a castigat!");
                     _currentPlayer = PlayerType.None;
+                    jocNou();
                 }
-                else if (winner == PlayerType.Human)
-                {
-                    MessageBox.Show("Ai castigat!");
-                    _currentPlayer = PlayerType.None;
+                else
+                {   // se verifica si restul conditiilor de terminare
+                    bool end; PlayerType winner;
+                    _board.CheckFinish(out end, out winner);
+
+                    if (end)
+                    {
+                        if (winner == PlayerType.Computer)
+                        {
+                            MessageBox.Show("Calculatorul a castigat!");
+                            _currentPlayer = PlayerType.None;
+                        }
+                        else if (winner == PlayerType.Human)
+                        {
+                            MessageBox.Show("Ai castigat!");
+                            _currentPlayer = PlayerType.None;
+                        }
+                    }
                 }
+
             }
+
         }
 
         private void AnimateTransition(Board b1, Board b2)
@@ -260,9 +366,18 @@ namespace SimpleCheckers
 
         private void jocNouToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
-            //_board = new Board();
-            //_currentPlayer = PlayerType.Computer;
-            //ComputerMove();
+            jocNou();
+        }
+
+        private void jocNou()
+        {
+            _board = new Board();
+            richTextBox1.Clear();
+            _currentPlayer = PlayerType.Computer;
+            levelDifficulty.Text = "Easy";
+            depthSearch.Text = "1";
+            evaluateFunctionType.Text = "Minimax simplu";
+            ComputerMove();
         }
 
         private void despreToolStripMenuItem_Click(object sender, EventArgs e)
@@ -284,42 +399,9 @@ namespace SimpleCheckers
             Environment.Exit(0);
         }
 
-        private void easyToolStripMenuItem_Click(object sender, EventArgs e)
+        private void label4_Click(object sender, EventArgs e)
         {
-            _board = new Board();
-            richTextBox1.Clear();
-            _currentPlayer = PlayerType.Computer;
-            _difficultyDepth = 1;
-            levelDifficulty.Text = "Easy";
-            depthSearch.Text = _difficultyDepth.ToString();
-            ComputerMove();
-        }
 
-        private void mediumToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            _board = new Board();
-            richTextBox1.Clear();
-            _currentPlayer = PlayerType.Computer;
-            _difficultyDepth = 4;
-            levelDifficulty.Text = "Medium";
-            depthSearch.Text = _difficultyDepth.ToString();
-            ComputerMove();
-        }
-
-        private void hardToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            _board = new Board();
-            richTextBox1.Clear();
-            _currentPlayer = PlayerType.Computer;
-            _difficultyDepth = 5;
-            levelDifficulty.Text = "Hard";
-            depthSearch.Text = _difficultyDepth.ToString();
-            ComputerMove();
-        }
-
-        private void reguliToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            
         }
     }
 }

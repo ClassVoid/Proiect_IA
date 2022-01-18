@@ -84,7 +84,6 @@ namespace SimpleCheckers
             }
         }
 
-        // public double EvaluationFunction() - completati aceasta metoda in fisierul Rezolvare.cs
 
         /// <summary>
         /// Creeaza o noua configuratie aplicand mutarea primita ca parametru in configuratia curenta
@@ -120,25 +119,6 @@ namespace SimpleCheckers
         /// <param name="winner">Cine a castigat: omul sau calculatorul</param>
         public void CheckFinish(out bool finished, out PlayerType winner)
         {
-          
-            /*
-            if (Pieces.Where(p => p.Player == PlayerType.Human && p.Y == Size - 1).Count() == Size)
-            {
-                finished = true;
-                winner = PlayerType.Human;
-                return;
-            }
-
-            if (Pieces.Where(p => p.Player == PlayerType.Computer && p.Y == 0).Count() == Size)
-            {
-                finished = true;
-                winner = PlayerType.Computer;
-                return;
-            }
-
-            finished = false;
-            winner = PlayerType.None;
-            */
 
             // Cine ramane primul fara piese pierde
             if(Pieces.Where(p=> p.Player == PlayerType.Human).Count() == 0)
@@ -223,5 +203,82 @@ namespace SimpleCheckers
 
             return attacked;
         }
+
+
+
+
+        // --------------------------
+
+        /// <summary>
+        /// Calculeaza functia de evaluare statica pentru configuratia (tabla) curenta
+        /// Functia trebuie sa tine cont de:
+        ///     pozitia piesei(safe/danger/attack zone)
+        ///     piesa poate deveni dama
+        ///     
+        /// </summary>
+        public double EvaluationFunction()
+        {
+            double opponentPoints = 0;
+            double computerPoints = 0;
+
+            foreach (Piece piece in this.Pieces)
+            {
+                if (piece.Player == PlayerType.Computer)
+                {
+                    computerPoints += this.Size - 1 - piece.Y;
+                }
+                if (piece.Player == PlayerType.Human)
+                {
+                    opponentPoints += piece.Y;
+                }
+            }
+            return computerPoints - opponentPoints;
+        }
+
+        public double EvaluationFunction2()
+        {
+            double humanPoints = 0;
+            double computerPoints = 0;
+
+            // Ponderi
+            double canAttackPoints = 5;     // puncte primite pentru pozitionare ofensiva
+            double beingAttackedPoints = -1;// puncte primite pentru pozitionare primejdioasa
+            double advancingPoints = 0;     // puncte primite pentru pisele normale care avanseaza catre ultima linie pr a deveni dame
+            double normalPieceValue = 8;    // puncte primite pentru fiecare piesa normala pe care o detin
+            double kingPieceValue = normalPieceValue * 2 + (Size - 1) * advancingPoints;     // puncte primite pentru fiecare dama pe care o detin
+            // Ar trebui sa incurajes deplasarea pieselor de tip dama catre celelalte piese inamice
+
+
+            foreach (Piece piece in this.Pieces)
+            {
+                if (piece.Player == PlayerType.Human)
+                {
+                    // Scorul primit pentru ca piesa exista
+                    humanPoints += piece.PT == PieceType.Normal ? normalPieceValue : kingPieceValue;
+                    humanPoints += GetAllAttackers(piece).Count * beingAttackedPoints;
+                    humanPoints += GetAllAttacked(piece).Count * canAttackPoints;
+                    if (piece.PT == PieceType.Normal)
+                    {
+                        humanPoints += piece.Y * advancingPoints;
+                    }
+                }
+                if (piece.Player == PlayerType.Computer)
+                {
+                    computerPoints += piece.PT == PieceType.Normal ? normalPieceValue : kingPieceValue;
+                    computerPoints += GetAllAttackers(piece).Count * beingAttackedPoints;
+                    computerPoints += GetAllAttacked(piece).Count * canAttackPoints;
+                    if (piece.PT == PieceType.Normal)
+                    {
+                        computerPoints += (Size - 1 - piece.Y) * advancingPoints;
+                    }
+                }
+            }
+
+            return computerPoints - humanPoints;
+        }
+
+
+
     }
+
 }

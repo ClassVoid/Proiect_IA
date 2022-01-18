@@ -9,11 +9,12 @@ namespace SimpleCheckers
     /// <summary>
     /// Implementeaza algoritmul minimax cu aplha beta prunning
     /// </summary>
-    class MinimaxAlphaBeta
+    public class MinimaxAlphaBeta
     {
         private static Random _rand = new Random();
 
-        public static int _depth = 6;
+        public static int _depth = 4;
+
 
         public static (Board, Move) FindNextBoard(Board currentBoard)
         {
@@ -33,7 +34,7 @@ namespace SimpleCheckers
                         Board boardVariant = currentBoard.MakeMove(move);
                         double alpha = double.NegativeInfinity;
                         double beta = double.PositiveInfinity;
-                        double score = Evaluate(boardVariant, 1, alpha , beta);
+                        double score = Evaluate(boardVariant, 1, alpha, beta);
                         if (first)
                         {
                             max = score;
@@ -65,10 +66,12 @@ namespace SimpleCheckers
             return (bestVariants[chosen], bestMoves[chosen]);
         }
 
+
         // daca adancimea are valoare para e calculatorul(maximizez)
         // altfel e jucatorul deci minimizez
         public static double Evaluate(Board currentBoard, int depth, double alpha, double beta)
         {
+            
             if (depth >= _depth)
             {
                 return currentBoard.EvaluationFunction2();
@@ -77,6 +80,7 @@ namespace SimpleCheckers
             if (depth % 2 == 0)
             {
                 double max = double.NegativeInfinity;
+                
                 foreach (Piece piece in currentBoard.Pieces)
                 {
                     if (piece.Player == PlayerType.Computer)
@@ -86,9 +90,10 @@ namespace SimpleCheckers
                         {
                             Board boardVariant = currentBoard.MakeMove(move);
                             double score = Evaluate(boardVariant, depth + 1, alpha, beta);
+                            
                             max = Math.Max(max, score);
                             alpha = Math.Max(alpha, score);
-                            if (beta <= alpha) return max;//break;
+                            if (beta <= alpha) return max;  // break
                         }
                     }
                 }
@@ -97,7 +102,8 @@ namespace SimpleCheckers
             else
             {
                 //Minimizez
-                double min = double.PositiveInfinity;       
+                double min = double.PositiveInfinity;
+                
                 foreach (Piece piece in currentBoard.Pieces)
                 {
                     if (piece.Player == PlayerType.Human)
@@ -107,9 +113,10 @@ namespace SimpleCheckers
                         {
                             Board boardVariant = currentBoard.MakeMove(move);
                             double score = Evaluate(boardVariant, depth + 1, alpha, beta);
+                           
                             min = Math.Min(min, score);
                             beta = Math.Min(beta, score);
-                            if (beta <= alpha) return min; //break;
+                            if (beta <= alpha)  return min;     // break
                         }
                     }
                 }

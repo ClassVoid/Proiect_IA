@@ -33,9 +33,6 @@ namespace SimpleCheckers
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.jocToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.jocNouToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.easyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.mediumToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.hardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.iesireToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ajutorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.despreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -45,7 +42,9 @@ namespace SimpleCheckers
             this.label2 = new System.Windows.Forms.Label();
             this.levelDifficulty = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.depthSearch = new System.Windows.Forms.TextBox();
+            this.depthSearch = new System.Windows.Forms.ComboBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.evaluateFunctionType = new System.Windows.Forms.ComboBox();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBoard)).BeginInit();
             this.SuspendLayout();
@@ -58,7 +57,7 @@ namespace SimpleCheckers
             this.ajutorToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1461, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(1590, 28);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -74,40 +73,15 @@ namespace SimpleCheckers
             // 
             // jocNouToolStripMenuItem
             // 
-            this.jocNouToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.easyToolStripMenuItem,
-            this.mediumToolStripMenuItem,
-            this.hardToolStripMenuItem});
             this.jocNouToolStripMenuItem.Name = "jocNouToolStripMenuItem";
-            this.jocNouToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.jocNouToolStripMenuItem.Size = new System.Drawing.Size(142, 26);
             this.jocNouToolStripMenuItem.Text = "Joc &nou";
             this.jocNouToolStripMenuItem.Click += new System.EventHandler(this.jocNouToolStripMenuItem_Click);
-            // 
-            // easyToolStripMenuItem
-            // 
-            this.easyToolStripMenuItem.Name = "easyToolStripMenuItem";
-            this.easyToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
-            this.easyToolStripMenuItem.Text = "Easy";
-            this.easyToolStripMenuItem.Click += new System.EventHandler(this.easyToolStripMenuItem_Click);
-            // 
-            // mediumToolStripMenuItem
-            // 
-            this.mediumToolStripMenuItem.Name = "mediumToolStripMenuItem";
-            this.mediumToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
-            this.mediumToolStripMenuItem.Text = "Medium";
-            this.mediumToolStripMenuItem.Click += new System.EventHandler(this.mediumToolStripMenuItem_Click);
-            // 
-            // hardToolStripMenuItem
-            // 
-            this.hardToolStripMenuItem.Name = "hardToolStripMenuItem";
-            this.hardToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
-            this.hardToolStripMenuItem.Text = "Hard";
-            this.hardToolStripMenuItem.Click += new System.EventHandler(this.hardToolStripMenuItem_Click);
             // 
             // iesireToolStripMenuItem
             // 
             this.iesireToolStripMenuItem.Name = "iesireToolStripMenuItem";
-            this.iesireToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.iesireToolStripMenuItem.Size = new System.Drawing.Size(142, 26);
             this.iesireToolStripMenuItem.Text = "&Iesire";
             this.iesireToolStripMenuItem.Click += new System.EventHandler(this.iesireToolStripMenuItem_Click);
             // 
@@ -123,7 +97,7 @@ namespace SimpleCheckers
             // despreToolStripMenuItem
             // 
             this.despreToolStripMenuItem.Name = "despreToolStripMenuItem";
-            this.despreToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.despreToolStripMenuItem.Size = new System.Drawing.Size(143, 26);
             this.despreToolStripMenuItem.Text = "&Reguli...";
             this.despreToolStripMenuItem.Click += new System.EventHandler(this.despreToolStripMenuItem_Click);
             // 
@@ -142,10 +116,10 @@ namespace SimpleCheckers
             // 
             this.richTextBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
             this.richTextBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.richTextBox1.Location = new System.Drawing.Point(1016, 104);
+            this.richTextBox1.Location = new System.Drawing.Point(1005, 104);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.ReadOnly = true;
-            this.richTextBox1.Size = new System.Drawing.Size(416, 249);
+            this.richTextBox1.Size = new System.Drawing.Size(528, 249);
             this.richTextBox1.TabIndex = 2;
             this.richTextBox1.Text = "";
             // 
@@ -177,12 +151,12 @@ namespace SimpleCheckers
             // levelDifficulty
             // 
             this.levelDifficulty.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
+            this.levelDifficulty.Enabled = false;
             this.levelDifficulty.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.levelDifficulty.Location = new System.Drawing.Point(1251, 388);
             this.levelDifficulty.Name = "levelDifficulty";
             this.levelDifficulty.Size = new System.Drawing.Size(100, 24);
             this.levelDifficulty.TabIndex = 5;
-            this.richTextBox1.ReadOnly = true;
             // 
             // label3
             // 
@@ -200,19 +174,50 @@ namespace SimpleCheckers
             // depthSearch
             // 
             this.depthSearch.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
-            this.depthSearch.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.depthSearch.Location = new System.Drawing.Point(1251, 444);
+            this.depthSearch.FormattingEnabled = true;
+            this.depthSearch.Items.AddRange(new object[] {
+            "1",
+            "4",
+            "6"});
+            this.depthSearch.Location = new System.Drawing.Point(1251, 446);
             this.depthSearch.Name = "depthSearch";
-            this.depthSearch.Size = new System.Drawing.Size(100, 24);
-            this.depthSearch.TabIndex = 7;
-            this.richTextBox1.ReadOnly = true;
+            this.depthSearch.Size = new System.Drawing.Size(130, 24);
+            this.depthSearch.TabIndex = 8;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.BackColor = System.Drawing.Color.Goldenrod;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.ForeColor = System.Drawing.Color.Black;
+            this.label4.Location = new System.Drawing.Point(1047, 507);
+            this.label4.Name = "label4";
+            this.label4.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.label4.Size = new System.Drawing.Size(81, 20);
+            this.label4.TabIndex = 9;
+            this.label4.Text = "Algoritm: ";
+            this.label4.Click += new System.EventHandler(this.label4_Click);
+            // 
+            // evaluateFunctionType
+            // 
+            this.evaluateFunctionType.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
+            this.evaluateFunctionType.FormattingEnabled = true;
+            this.evaluateFunctionType.Items.AddRange(new object[] {
+            "Minimax simplu",
+            "Minimax alpha-beta pruning"});
+            this.evaluateFunctionType.Location = new System.Drawing.Point(1145, 503);
+            this.evaluateFunctionType.Name = "evaluateFunctionType";
+            this.evaluateFunctionType.Size = new System.Drawing.Size(236, 24);
+            this.evaluateFunctionType.TabIndex = 10;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.Sienna;
-            this.ClientSize = new System.Drawing.Size(1461, 746);
+            this.ClientSize = new System.Drawing.Size(1590, 746);
+            this.Controls.Add(this.evaluateFunctionType);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.depthSearch);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.levelDifficulty);
@@ -244,15 +249,14 @@ namespace SimpleCheckers
         private System.Windows.Forms.PictureBox pictureBoxBoard;
         private System.Windows.Forms.ToolStripMenuItem ajutorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem despreToolStripMenuItem;
-        private ToolStripMenuItem easyToolStripMenuItem;
-        private ToolStripMenuItem mediumToolStripMenuItem;
-        private ToolStripMenuItem hardToolStripMenuItem;
         private RichTextBox richTextBox1;
         private Label label1;
         private Label label2;
         private TextBox levelDifficulty;
         private Label label3;
-        private TextBox depthSearch;
+        private ComboBox depthSearch;
+        private Label label4;
+        private ComboBox evaluateFunctionType;
 
         // This is outrageous but it can be an easy logger
         //public static RichTextBox richTextBox1 { get; set; }
